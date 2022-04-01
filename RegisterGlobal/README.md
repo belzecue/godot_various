@@ -151,6 +151,7 @@ var x = Globals.refs["my_key"]
 **SAFE**  
 var x = Globals.get_ref_or_null("my_key")
 
+**IMPORTANT**:  Always test for null before using the fetched reference.  You'll get a null back if your requested global key isn't found (i.e. was never registered) or if the registered referenced object is now invalid (has been destroyed).
   
 ```
 func get_ref_or_null(key: String, check_valid: bool = true):
