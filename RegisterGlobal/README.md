@@ -189,6 +189,16 @@ func _wait_for_globals():
 On the second frame after startup, the camera script fetches the reference to SimplePCGTerrain from the global dictionary and sets its own property "Far".  The draw distance is now set from the config resource attached to SimplePCGTerrain.  At this point, the RegisterGlobal child under SimplePCGTerrain is being queue_freed, having done its duty in the first frame.
 
 # Improvements
-Further checks are probably a good idea, like checking for duplicate keys before adding to the dictionary on startup.
+* Further checks are probably a good idea, like checking for duplicate keys before adding to the dictionary on startup.
+* If you like to be pure about your decoupling, here's how you don't assume Globals exists:
+```
+func _ready():
+  # Do other stuff
+  if get_node_or_null("/root/Globals"): call_deferred("_wait_for_globals")
 
 
+func _wait_for_globals():
+	var _value = Globals.get_ref_or_null("simple_pcg_terrain").terrain_config.farDistFade
+	if _value: far = _value
+
+```
