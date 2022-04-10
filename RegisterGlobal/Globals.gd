@@ -36,23 +36,24 @@ func scan_all_children(node: Node):
 # Returns null if key not found or reference was deleted (in which
 # case the entry will be removed from the dictionary).
 # Only bypass check_valid when you know the node won't be deleted.
-func get_ref_or_null(key: String, check_valid: bool = true):
-	var result = null
+func get_ref_or_null(key: String, check_valid: bool = true) -> WeakRef:
+	var result: WeakRef = null
 	if refs.has(key):
-		var ref = refs[key]
+		var wref: WeakRef = refs[key];
+		var node: Node = wref.get_ref()
 		if check_valid:
-			if is_instance_valid(ref) and not ref.is_queued_for_deletion():
-				result = refs[key] # Reference still valid
+			if is_instance_valid(node) and not node.is_queued_for_deletion():
+				result = wref # Reference still valid
 			else: refs.erase(key) # Reference invalid! Remove from dictionary
-		else: result = refs[key]
+		else: result = wref
 	return result
 
 
 # Always use this method to set key/value pair.
 # Returns false if the key was not stored/overwritten.
-func set_ref(key: String, obj, overwrite: bool = false) -> bool:
+func set_ref(key: String, node: Node, overwrite: bool = false) -> bool:
 	if overwrite or not refs.has(key):
-		refs[key] = weakref(obj).get_ref() # Don't increment the object's ref count.
+		refs[key] = weakref(node) # Don't increment the object's ref count.
 		return true
 	else: return false
 
