@@ -1,6 +1,7 @@
 # Global blackboard autoload.
 extends Node
 
+
 # refs: Global reference tracking
 # Reading values directly from the dictionary is unsafe due
 # to potentially invalid references to deleted objects.
@@ -34,13 +35,25 @@ func scan_all_children(node: Node):
 # Always use this method to retrieve a value by key name.
 # Returns null if key not found or reference was deleted (in which
 # case the entry will be removed from the dictionary).
+# Only bypass check_valid when you know the node won't be deleted.
 func get_ref_or_null(key: String, check_valid: bool = true):
-	if not refs.has(key):
-		return null
-	elif check_valid:
-		if is_instance_valid(refs[key]):
-			return refs[key] # Reference still valid
-		else:
-			refs.erase(key) # Reference invalid! Remove from dictionary
-			return null
-	else: return refs[key]
+	var result = null
+	if refs.has(key):
+		var ref = refs[key]
+		if check_valid:
+			if is_instance_valid(ref) and not ref.is_queued_for_deletion():
+				result = refs[key] # Reference still valid
+			else: refs.erase(key) # Reference invalid! Remove from dictionary
+		else: result = refs[key]
+	return result
+
+
+# Always use this method to set key/value pair.
+# Returns false if the key was not stored/overwritten.
+func set_ref(key: String, obj, overwrite: bool = false) -> bool:
+	if overwrite or not refs.has(key):
+		refs[key] = weakref(obj) # Don't increment the object's ref count.
+		return true
+	else: return false
+
+
