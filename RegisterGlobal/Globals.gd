@@ -25,7 +25,7 @@ func scan_all_children(node: Node):
 		if N.get_class() == "RegisterGlobal":
 			var _parent = N.get_parent()
 			assert(N.global_name.length() >= 5, _parent.name + ": global name must be 5 characters minimum!")
-			refs[N.global_name] = _parent
+			Globals.set_ref(N.global_name, _parent)
 			N.call_deferred("queue_free")
 		# Process children
 		if N.get_child_count() > 0:
@@ -52,7 +52,7 @@ func get_ref_or_null(key: String, check_valid: bool = true):
 # Returns false if the key was not stored/overwritten.
 func set_ref(key: String, obj, overwrite: bool = false) -> bool:
 	if overwrite or not refs.has(key):
-		refs[key] = weakref(obj) # Don't increment the object's ref count.
+		refs[key] = weakref(obj).get_ref() # Don't increment the object's ref count.
 		return true
 	else: return false
 
