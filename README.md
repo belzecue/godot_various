@@ -11,7 +11,7 @@ Creates a 3D boolean array in a 2D BitMap object.  Useful for doing logical oper
 
 ## RegisterGlobal - [link](https://github.com/belzecue/godot_various/tree/main/RegisterGlobal)
 
-Autoload singleton and custom node that registers its parent in the global reference dictionary, so that anything anywhere can grab a reference to a registered object.  Expired/deleted references get cleaned from the dictionary safely.
+Autoload singleton and custom node that registers its parent in the global reference dictionary, so that anything anywhere can grab a reference to a registered object.  Expired/deleted references are handled safely and get cleaned from the dictionary automatically.
 
 ## Sexy Stupid State Machine - [link](https://github.com/belzecue/godot_various/blob/main/SSSM.gd)
 
