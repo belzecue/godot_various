@@ -3,6 +3,7 @@ class_name SSSM extends Reference
 
 signal state_changed
 var state: int setget _set_state
+var keys: Array
 
 
 func _set_state(new_state: int) -> void:
@@ -13,6 +14,11 @@ func _set_state(new_state: int) -> void:
 	if has_method("_state_entered"): call("_state_entered", old_state, new_state)  # POST-CHANGE
 	emit_signal("state_changed", old_state, new_state)
 
+
+func get_state_name(_state: int) -> String:
+	return keys[_state]
+
+
 """
 # Subclass as e.g.
 	
@@ -20,12 +26,13 @@ func _set_state(new_state: int) -> void:
 class_name SSSM_1 extends SSSM
 
 
+# Must define States enum.
 enum States {ONE, TWO, THREE} # Never assign int values!
-var keys: Array = States.keys()
 
 
-func get_state_name(_state: int) -> String:
-	return keys[_state]
+# Must populate base 'keys' property.
+func _init():
+	keys = States.keys()
 
 
 # Optional exited/entered methods below.
@@ -36,8 +43,6 @@ func _state_exited(from: int, to: int) -> void:
 
 func _state_entered(from: int, to: int) -> void:
 	print("SSSM_1 entered: %s" % get_state_name(to))
-
-
 
 """
 
@@ -51,7 +56,9 @@ var sssm_1: SSSM_1 = SSSM_1.new()
 
 func _ready():
 	sssm_1.connect("state_changed", self, "on_sssm1_changed")
+	
 	sssm_1.state = sssm_1.States.THREE
+	
 	print(sssm_1.get_state_name(sssm_1.state))
 
 
