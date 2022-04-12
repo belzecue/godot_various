@@ -4,18 +4,24 @@ class_name SSSM extends Reference
 signal state_changed
 var state: int setget _set_state
 var _keys: Array
+var _has_exited_func: bool
+var _has_entered_func: bool
+var _func_name_exited: String = "_state_exited"
+var _func_name_entered: String = "_state_entered"
 
 
 func _init(_states: Dictionary):
 	_keys = _states.keys()
+	_has_exited_func = has_method(_func_name_exited)
+	_has_entered_func = has_method(_func_name_entered)
 
 
 func _set_state(new_state: int) -> void:
 	var old_state: int = state
 	if new_state == old_state: return
-	if has_method("_state_exited"): call("_state_exited", old_state, new_state) # PRE-CHANGE
+	if _has_exited_func: call(_func_name_exited, old_state, new_state) # PRE-CHANGE
 	state = new_state
-	if has_method("_state_entered"): call("_state_entered", old_state, new_state)  # POST-CHANGE
+	if _has_entered_func: call(_func_name_entered, old_state, new_state)  # POST-CHANGE
 	emit_signal("state_changed", old_state, new_state)
 
 
