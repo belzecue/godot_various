@@ -8,9 +8,9 @@ var state: int setget _set_state
 func _set_state(new_state: int) -> void:
 	var old_state: int = state
 	if new_state == old_state: return
-	if has_method("state_exited"): call("state_exited", old_state, new_state) # PRE-CHANGE
+	if has_method("_state_exited"): call("_state_exited", old_state, new_state) # PRE-CHANGE
 	state = new_state
-	if has_method("state_entered"): call("state_entered", old_state, new_state)  # POST-CHANGE
+	if has_method("_state_entered"): call("_state_entered", old_state, new_state)  # POST-CHANGE
 	emit_signal("state_changed", old_state, new_state)
 
 """
@@ -30,11 +30,11 @@ func get_state_name(_state: int) -> String:
 
 # Optional exited/entered methods below.
 
-func state_exited(from: int, to: int) -> void:
+func _state_exited(from: int, to: int) -> void:
 	print("SSSM_1 exited: %s" % get_state_name(from))
 
 
-func state_entered(from: int, to: int) -> void:
+func _state_entered(from: int, to: int) -> void:
 	print("SSSM_1 entered: %s" % get_state_name(to))
 
 
