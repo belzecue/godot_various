@@ -3,7 +3,11 @@ class_name SSSM extends Reference
 
 signal state_changed
 var state: int setget _set_state
-var keys: Array
+var _keys: Array
+
+
+func _init(_states: Dictionary):
+	_keys = _states.keys()
 
 
 func _set_state(new_state: int) -> void:
@@ -16,7 +20,7 @@ func _set_state(new_state: int) -> void:
 
 
 func get_state_name(_state: int) -> String:
-	return keys[_state]
+	return _keys[_state]
 
 
 """
@@ -30,9 +34,9 @@ class_name SSSM_1 extends SSSM
 enum States {ONE, TWO, THREE} # Never assign int values!
 
 
-# Must populate base 'keys' property.
-func _init():
-	keys = States.keys()
+# Must define constructor.
+func _init(States).(States):
+	pass # pass arguments through to base class.
 
 
 # Optional exited/entered methods below.
@@ -51,7 +55,7 @@ func _state_entered(from: int, to: int) -> void:
 extends Node
 
 
-var sssm_1: SSSM_1 = SSSM_1.new()
+var sssm_1: SSSM_1 = SSSM_1.new(SSSM_1.States)
 
 
 func _ready():
