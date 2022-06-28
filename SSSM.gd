@@ -6,8 +6,8 @@ var state: int setget _set_state
 var _keys: Array
 var _has_exited_func: bool
 var _has_entered_func: bool
-var _func_name_exited: String = "_state_exited"
-var _func_name_entered: String = "_state_entered"
+const _func_name_exited: String = "_state_exited"
+const _func_name_entered: String = "_state_entered"
 
 
 func _init(_states: Dictionary):
