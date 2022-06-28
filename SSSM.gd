@@ -66,9 +66,7 @@ var sssm_1: SSSM_1 = SSSM_1.new(SSSM_1.States)
 
 func _ready():
 	sssm_1.connect("state_changed", self, "on_sssm1_changed")
-	
 	sssm_1.state = sssm_1.States.THREE
-	
 	print(sssm_1.get_state_name(sssm_1.state))
 
 
